@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ULTRA-PRO | Elite Multi-Booking Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary: #adff00; --bg: #05070a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: white; -webkit-tap-highlight-color: transparent; }
+        
+        .glass { background: rgba(15, 20, 30, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Slot States */
+        .slot-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .slot-selected { 
+            background: var(--primary) !important; 
+            color: black !important; 
+            transform: scale(0.95);
+            box-shadow: 0 0 30px rgba(173, 255, 0, 0.4);
+            border: none !important;
+        }
+
+        /* Admin Login Shimmer */
+        .admin-glow {
+            background: linear-gradient(90deg, #1e293b, #334155, #1e293b);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+        /* Smooth Modal */
+        #modal-content { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .translate-y-full { transform: translateY(100%); }
+
+        /* Loader Animation */
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(173, 255, 0, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="pb-36">
+
+    <nav class="fixed top-0 w-full z-[100] px-6 py-5 flex justify-between items-center glass border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <div class="w-9 h-9 bg-lime-500 rounded-xl flex items-center justify-center rotate-3 shadow-lg shadow-lime-500/20">
+                <i data-lucide="shield-check" class="text-black w-5 h-5"></i>
+            </div>
+            <span class="font-black text-xl tracking-tighter uppercase">ULTRA<span class="text-lime-400">PRO</span></span>
+        </div>
+        
+        <button onclick="toggleAdmin(true)" class="admin-glow px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 active:scale-95 transition-all">
+            <i data-lucide="lock" class="w-4 h-4 text-lime-400"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Admin Portal</span>
+        </button>
+    </nav>
+
+    <header class="relative h-[45vh] w-full overflow-hidden">
+        <img id="hero-img" src="https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=1000" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#05070a] via-transparent to-black/20"></div>
+        <div class="absolute bottom-10 left-6">
+            <h1 id="turf-title" class="text-4xl font-black tracking-tighter leading-none mb-2">MARACANÁ<br>STADIUM</h1>
+            <p class="text-gray-400 text-sm flex items-center gap-1 font-medium"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-lime-400"></i> Pune, MH • Open 24/7</p>
+        </div>
+    </header>
+
+    <div class="px-6 -mt-6 relative z-20 flex gap-2">
+        <button onclick="updateSport('football')" id="fb-btn" class="flex-1 py-4 rounded-2xl bg-lime-500 text-black font-black flex flex-col items-center gap-1 shadow-xl transition-all">
+            <i data-lucide="trophy" class="w-5 h-5"></i><span class="text-[10px] uppercase">Football</span>
+        </button>
+        <button onclick="updateSport('cricket')" id="cr-btn" class="flex-1 py-4 rounded-2xl bg-[#111827] text-gray-500 font-black flex flex-col items-center gap-1 border border-white/5 transition-all">
+            <i data-lucide="layers" class="w-5 h-5"></i><span class="text-[10px] uppercase">Cricket</span>
+        </button>
+    </div>
+
+    <section class="px-6 mt-10">
+        <h3 class="font-bold text-lg mb-4 flex items-center justify-between">Select Date <span class="text-[10px] text-lime-400">APRIL 2026</span></h3>
+        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+            <div class="min-w-[65px] py-4 bg-lime-500 rounded-3xl flex flex-col items-center text-black shadow-lg shadow-lime-500/20">
+                <span class="text-[10px] font-bold opacity-60">MON</span><span class="text-xl font-black">06</span>
+            </div>
+            <script>
+                const d = ['TUE','WED','THU','FRI','SAT','SUN'];
+                for(let i=0; i<6; i++){
+                    document.write(`<div class="min-w-[65px] py-4 bg-[#111827] rounded-3xl flex flex-col items-center text-gray-500 border border-white/5 opacity-50"><span class="text-[10px] font-bold opacity-60">${d[i]}</span><span class="text-xl font-black">${i+7}</span></div>`);
+                }
+            </script>
+        </div>
+    </section>
+
+    <section class="px-6 mt-10">
+        <h3 class="font-bold text-lg mb-4">Choose Slots <span class="text-[10px] text-gray-500 font-medium ml-2">(Multiple Selectable)</span></h3>
+        <div class="grid grid-cols-3 gap-3" id="slots-container"></div>
+    </section>
+
+    <div class="fixed bottom-0 w-full z-[80] glass border-t border-white/10 p-6 flex items-center justify-between gap-6">
+        <div class="shrink-0">
+            <p class="text-[10px] font-bold text-gray-500 uppercase">Selected <span id="slot-count" class="text-lime-400 font-black">0</span></p>
+            <h4 class="text-2xl font-black tracking-tighter" id="total-price">₹0</h4>
+        </div>
+        <button id="pay-btn" disabled onclick="toggleModal(true)" class="flex-1 h-16 bg-lime-500 disabled:bg-gray-800 disabled:text-gray-500 text-black font-black rounded-2xl shadow-xl shadow-lime-500/20 active:scale-95 transition-all">
+            BOOK NOW
+        </button>
+    </div>
+
+    <div id="admin-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center px-6">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="toggleAdmin(false)"></div>
+        <div class="w-full max-w-sm glass p-8 rounded-[2.5rem] relative z-10 border border-lime-500/20 shadow-2xl">
+            <div class="w-16 h-16 bg-lime-500/10 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <i data-lucide="lock" class="text-lime-500 w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-black text-center mb-2 tracking-tighter">Admin Login</h2>
+            <p class="text-center text-gray-500 text-xs mb-8">Secure Access Only</p>
+            <div class="space-y-4">
+                <input type="email" placeholder="Email Address" class="w-full bg-[#05070a] border border-white/5 py-4 px-6 rounded-2xl outline-none focus:border-lime-500 transition-all font-bold">
+                <input type="password" placeholder="Password" class="w-full bg-[#05070a] border border-white/5 py-4 px-6 rounded-2xl outline-none focus:border-lime-500 transition-all font-bold">
+            </div>
+            <button onclick="toggleAdmin(false)" class="w-full py-4 bg-lime-500 text-black font-black rounded-2xl mt-8 shadow-lg active:scale-95 transition-all uppercase tracking-widest text-xs">Authorize Access</button>
+        </div>
+    </div>
+
+    <div id="pay-modal" class="fixed inset-0 z-[150] hidden flex items-end sm:items-center justify-center">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-xl" onclick="toggleModal(false)"></div>
+        <div id="modal-content" class="w-full max-w-md glass p-10 rounded-t-[3rem] translate-y-full relative z-10 border-t border-white/10">
+            <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
+            <h2 class="text-3xl font-black mb-2 tracking-tighter">Checkout</h2>
+            <p id="final-summary" class="text-gray-400 text-sm mb-8 italic font-medium"></p>
+            
+            <div class="space-y-4">
+                <input type="text" placeholder="Full Name" class="w-full bg-[#05070a] border border-white/5 py-5 px-8 rounded-3xl outline-none focus:border-lime-500 font-bold">
+                <input type="tel" placeholder="Mobile No" class="w-full bg-[#05070a] border border-white/5 py-5 px-8 rounded-3xl outline-none focus:border-lime-500 font-bold">
+            </div>
+
+            <div class="mt-8 flex gap-4">
+                <button onclick="processBooking()" class="flex-[2] h-20 bg-lime-500 text-black font-black rounded-[2rem] shadow-2xl active:scale-95 transition-all text-xl">PAY & CONFIRM</button>
+                <button onclick="toggleModal(false)" class="flex-1 h-20 bg-white/5 border border-white/5 rounded-[2rem] flex items-center justify-center active:scale-95 transition-all">
+                    <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success" class="fixed inset-0 z-[300] bg-[#05070a] hidden flex flex-col items-center justify-center p-12 text-center">
+        <div class="w-32 h-32 bg-lime-500 rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(173,255,0,0.4)] mb-10 animate-bounce">
+            <i data-lucide="check" class="text-black w-16 h-16 stroke-[4px]"></i>
+        </div>
+        <h2 class="text-5xl font-black mb-4 tracking-tighter">LEGENDARY!</h2>
+        <p class="text-gray-400 text-lg mb-12" id="success-msg"></p>
+        <button onclick="location.reload()" class="px-12 py-5 bg-white text-black font-black rounded-full tracking-[0.2em] active:scale-95 transition-all">BACK TO ARENA</button>
+    </div>
+
+    <div id="loader" class="fixed inset-0 z-[250] bg-black hidden flex flex-col items-center justify-center text-center">
+        <div class="spinner mb-8"></div>
+        <h3 class="text-lime-500 font-black tracking-widest text-sm uppercase">Secure Payment Gateway</h3>
+    </div>
+
+    <script>
+        let selectedSlots = [];
+        let sport = 'football';
+        const imgSet = {
+            football: { img: "https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=1000", name: "MARACANÁ STADIUM" },
+            cricket: { img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000", name: "LORD'S ARENA" }
+        };
+
+        function renderSlots() {
+            const grid = document.getElementById('slots-container');
+            grid.innerHTML = '';
+            for(let h=6; h<=22; h++) {
+                const isPeak = h >= 17 && h <= 21;
+                const price = isPeak ? 1200 : 800;
+                const time = `${h > 12 ? h-12 : h}:00 ${h >= 12 ? 'PM' : 'AM'}`;
+                const isBooked = Math.random() < 0.2;
+                
+                const card = document.createElement('div');
+                card.className = `slot-card h-24 bg-[#111827] border border-white/5 rounded-[2rem] flex flex-col items-center justify-center ${isBooked ? 'opacity-10 grayscale pointer-events-none' : ''}`;
+                card.id = `slot-${h}`;
+                card.innerHTML = `
+                    <span class="text-[8px] font-black ${isPeak ? 'text-orange-500' : 'text-gray-600'} uppercase mb-1">${isPeak ? 'Peak' : 'Standard'}</span>
+                    <span class="text-sm font-black">${time}</span>
+                    <span class="text-[10px] font-bold text-lime-400 mt-1 tracking-tight">₹${price}</span>
+                `;
+
+                if(!isBooked) {
+                    card.onclick = () => {
+                        const index = selectedSlots.findIndex(s => s.id === h);
+                        if(index > -1) {
+                            selectedSlots.splice(index, 1);
+                            card.classList.remove('slot-selected');
+                        } else {
+                            selectedSlots.push({ id: h, time, price });
+                            card.classList.add('slot-selected');
+                        }
+                        updateUI();
+                    };
+                }
+                grid.appendChild(card);
+            }
+        }
+
+        function updateUI() {
+            const total = selectedSlots.reduce((sum, s) => sum + s.price, 0);
+            document.getElementById('slot-count').innerText = selectedSlots.length;
+            document.getElementById('total-price').innerText = `₹${total}`;
+            document.getElementById('pay-btn').disabled = selectedSlots.length === 0;
+        }
+
+        function updateSport(s) {
+            sport = s;
+            document.getElementById('hero-img').src = imgSet[s].img;
+            document.getElementById('turf-title').innerText = imgSet[s].name.split(' ')[0] + '\n' + imgSet[s].name.split(' ')[1];
+            
+            const fb = document.getElementById('fb-btn');
+            const cr = document.getElementById('cr-btn');
+            
+            if(s === 'football') {
+                fb.className = "flex-1 py-4 rounded-2xl bg-lime-500 text-black font-black flex flex-col items-center gap-1 shadow-xl transition-all";
+                cr.className = "flex-1 py-4 rounded-2xl bg-[#111827] text-gray-500 font-black flex flex-col items-center gap-1 border border-white/5 transition-all";
+            } else {
+                cr.className = "flex-1 py-4 rounded-2xl bg-blue-500 text-white font-black flex flex-col items-center gap-1 shadow-xl transition-all";
+                fb.className = "flex-1 py-4 rounded-2xl bg-[#111827] text-gray-500 font-black flex flex-col items-center gap-1 border border-white/5 transition-all";
+            }
+            selectedSlots = [];
+            updateUI();
+            renderSlots();
+        }
+
+        function toggleAdmin(show) { document.getElementById('admin-modal').classList.toggle('hidden', !show); }
+        
+        function toggleModal(show) {
+            const m = document.getElementById('pay-modal');
+            const c = document.getElementById('modal-content');
+            if(show) {
+                m.classList.remove('hidden');
+                document.getElementById('final-summary').innerText = `${selectedSlots.length} Slots Reserved • Total ₹${selectedSlots.reduce((sum, s) => sum + s.price, 0)}`;
+                setTimeout(() => c.classList.remove('translate-y-full'), 10);
+            } else {
+                c.classList.add('translate-y-full');
+                setTimeout(() => m.classList.add('hidden'), 500);
+            }
+        }
+
+        function processBooking() {
+            toggleModal(false);
+            document.getElementById('loader').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('success').classList.remove('hidden');
+                document.getElementById('success-msg').innerHTML = `Booking Confirmed for <b>${selectedSlots.length}</b> slots.<br>Confirmation ID: <b>#UT-${Math.floor(Math.random()*90000)+10000}</b>`;
+                lucide.createIcons();
+            }, 3000);
+        }
+
+        renderSlots();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
