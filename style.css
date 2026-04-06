@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0f172a;
+  color: #fff;
+}
+
+.container {
+  padding: 15px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.header p {
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.image {
+  height: 180px;
+  border-radius: 15px;
+  background: url('https://images.unsplash.com/photo-1603297631956-bf5a2f2b1766') center/cover;
+  margin-bottom: 15px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.slot {
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.available {
+  background: #16a34a;
+}
+
+.booked {
+  background: #dc2626;
+  opacity: 0.6;
+}
+
+.selected {
+  outline: 3px solid #22c55e;
+}
+
+#bookBtn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #22c55e;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#bookBtn:disabled {
+  background: #475569;
+}
